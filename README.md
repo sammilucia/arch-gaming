@@ -43,6 +43,23 @@ By default the NVIDIA Shader Cache is 128MB and shared for all games. To enable 
 
 That should be it! Try the game and see how it goes.
 
+## Disable laggy screen updates
+For whatever reason (maybe me not understanding something) `vblank_mode=0` still leaves me with a weird laggy display and screen tearing. This fix shouldn't hurt and it works for me. To fix this:
+
+1. Create a new config file with `nano /etc/drirc`.
+2. Add the following to the file:
+
+```
+<driconf>
+   <device>
+       <application name="Default">
+           <option name="vblank_mode" value="0" />
+       </application>
+   </device>
+</driconf>
+```
+3. Reboot.
+
 ## Using environment variables
 If you don't want to specify launch options for _every single game_ you can put the safe options into `/etc/environment` so they are enabled during login. To do this:
 
