@@ -112,8 +112,9 @@ To install, do:
 1. `pacman -S lutris python-magic`
 2. Ensure your Steam profile and games list is set to _public_. This is how Lutris discovers your games list. (Everything else can be set to private.) 
 ![Screenshot from 2021-12-28 16-20-58](https://user-images.githubusercontent.com/3295286/147611722-11763405-64fc-4167-aeb0-e5b95e7b48fa.png)
+3. Run a game, and run `gamemoded -s` to check gamemode is still active while launching a game from Lutris.
 
-That should be it! Run Lutris, and start your games from Lutris, this should hopefully have the most optimised and tested settings for each game.
+That should be it! Run Lutris, and start your games from Lutris, this should hopefully have the most optimised and tested settings for each game. If you have any problems, you can run `lutris -d` to see what might be going on.
 
 ## What do the flags do?
 - `vblank_mode=0` prevents Proton for trying to wait for vblank (the next screen redraw), which depending on a number of factors (desktop environment, and your specific config), it may not even get. This can lead to a really weird tearing effect.
