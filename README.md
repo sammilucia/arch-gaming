@@ -31,7 +31,18 @@ Include = /etc/pacman.d/mirrorlist
 2. Run `pacman -Syy` to update your repositories.
 3. Install `lib32-gamemode` with `pacman -S lib32-gamemode` [link to library](https://github.com/FeralInteractive/gamemode).
 4. Install `gamemode` with `pacman -S gamemode`.
-5. add `gamemoderun` to the beginning of your Steam game Launch Options.
+5. Add `gamemoderun` to the beginning of your Steam game Launch Options.
+6. Create a new user group with `groupadd -r gamemode`.
+7. Add yourself to the group with `usermod -a <yourUserName> -G gamemode`
+8. Edit system security limits for users `nano /etc/security/limits.conf` to add the line:
+
+```
+@gamemode       -       nice    19
+```
+
+This will enable user accounts that are members of the gamemode group to increase (or 'renice') processes.
+
+9. Now test everything is working by running `gamemoded -t`. Fix any errors (hopefully none).
 
 Note: you can check whether Game Mode is active with `gamemoded -s` from a command line. For more information on Game Mode and an example config (ini) file see the [Arch Wiki](https://wiki.archlinux.org/title/Gamemode).
 
