@@ -13,7 +13,7 @@ Please feel free to contribute! I most certainly am not the expert on this, just
 This guide assumes you have the latest NVIDIA drivers installed and working correctly. Version 495.46 at the time of writing.
 
 ## Guide
-1. Install the latest (Steam)[https://archlinux.org/packages/multilib/x86_64/steam/], login and download your games
+1. Install the latest [Steam](https://archlinux.org/packages/multilib/x86_64/steam/), login and download your games
 2. If you want Steam to start with certain command line options, create a file `~/.config/steam-runtime-flags.conf` and put the options in there. There are a few ways to list them, however I find one per line easy, e.g: ![Screenshot from 2021-12-27 22-48-14](https://user-images.githubusercontent.com/3295286/147529440-e8ae6eee-08f8-4a79-9ba9-b243125bcb0e.png)
 3. In Steam > Settings > Steam Play > **Enable Steam Play for all other titles** > **Proton Experimental** ![Screenshot from 2021-12-27 22-48-14](https://user-images.githubusercontent.com/3295286/147529249-29eb8927-abf3-4fba-b092-6fa8a0f66c39.png)
 4. Force the new game to run with Proton Experimental: Right click the game > Properties > Compatibility > **Force the use of a specific Steam Play compatibility tool** > **Proton Experimental** ![Screenshot from 2021-12-27 22-53-12](https://user-images.githubusercontent.com/3295286/147529496-fc4e14c3-1a7b-4ef8-9211-6cbf09e14236.png)
@@ -34,6 +34,6 @@ This guide assumes you have the latest NVIDIA drivers installed and working corr
 - `__VK_LAYER_NV_optimus=NVIDIA_only`together with `__NV_PRIME_RENDER_OFFLOAD=1` forces Vulkan to choose the NVIDIA driver.
 
 ## Futher reading
-- (Lutris docs)[https://github.com/lutris/docs/blob/master/Performance-Tweaks.md] - an (?up-to-date) list of (?all) flags.
-- (Gaming - ArchWiki) [https://wiki.archlinux.org/title/Gaming#Improving_performance] - of special interest, the section on `schedtool` and `schedtoold`
-- (Xanmod kernel)[https://github.com/arglebargle-arch/xanmod-rog-PKGBUILD] - including the Asus ROG patches from (Asus Linux)[https://asus-linux.org/]
+- [Lutris docs](https://github.com/lutris/docs/blob/master/Performance-Tweaks.md) - an (?up-to-date) list of (?all) flags.
+- [Gaming - ArchWiki](https://wiki.archlinux.org/title/Gaming#Improving_performance) - of special interest, the section on `schedtool` and `schedtoold`
+- [Xanmod kernel](https://github.com/arglebargle-arch/xanmod-rog-PKGBUILD) - including the Asus ROG patches from (Asus Linux)[https://asus-linux.org/]
