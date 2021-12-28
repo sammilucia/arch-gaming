@@ -105,6 +105,16 @@ I use the following commands to set fan curves for the Performance power profile
 1. `asusctl fan-curve -m performance -f cpu -D 30c:80,40c:80,50c:80,60c:180,70c:180,80c:180,90c:180,180c:220` to set the CPU fan curve.
 2. `asusctl fan-curve -m performance -f gpu -D 30c:80,40c:80,50c:80,60c:180,70c:180,80c:180,90c:180,180c:220` to set the GPU fan curve.
 
+## Lutris installation
+Finally, you can install Lutris, which provides a single interface for all your games, and runs games with community optimised settings.
+
+To install, do:
+1. `pacman -S lutris python-magic`
+2. Ensure your Steam profile and games list is set to _public_. This is how Lutris discovers your games list. (Everything else can be set to private.) 
+![Screenshot from 2021-12-28 16-20-58](https://user-images.githubusercontent.com/3295286/147611722-11763405-64fc-4167-aeb0-e5b95e7b48fa.png)
+
+That should be it! Run Lutris, and start your games from Lutris, this should hopefully have the most optimised and tested settings for each game.
+
 ## What do the flags do?
 - `vblank_mode=0` prevents Proton for trying to wait for vblank (the next screen redraw), which depending on a number of factors (desktop environment, and your specific config), it may not even get. This can lead to a really weird tearing effect.
 - `PROTON_ENABLE_NVAPI=1` is a new command which enables DLSS.
