@@ -43,7 +43,7 @@ By default the NVIDIA Shader Cache is 128MB and shared for all games. To enable 
 
 That should be it! Try the game and see how it goes.
 
-## Disable laggy screen updates
+## Fix laggy screen updates
 For whatever reason (maybe me not understanding something) `vblank_mode=0` still leaves me with a weird laggy display and screen tearing. This fix shouldn't hurt and it works for me. To fix this:
 
 1. Create a new config file with `nano /etc/drirc`.
@@ -60,7 +60,7 @@ For whatever reason (maybe me not understanding something) `vblank_mode=0` still
 ```
 3. Reboot.
 
-## Using environment variables
+## Using environment variables instead
 If you don't want to specify launch options for _every single game_ you can put the safe options into `/etc/environment` so they are enabled during login. To do this:
 
 1. Create and edit the file with `nano /etc/environment` if it doesn't already exist.
@@ -85,6 +85,14 @@ __VK_LAYER_NV_optimus=NVIDIA_only
 3. In the above example you would still use launch options like: `gamemoderun vblank_mode=0 VKD3D_CONFIG=force_static_cbv %command%`. Unless you want to live on the wild side and put them all into env variables.
 
 The other disadvantage of this method is that if you play some lightweight games on battery (\*cough\* Stardew Valley \*cough\*), they will be forced to use the NVIDIA, which will drain battery.
+
+## Asus fan settings
+If you are on a recent Asus notebook, see asus-linux.org for guides on how to properly configure NVIDIA drivers and support for configurable fan curves.
+
+I use the following commands to set fan curves for the Performance power profile with [asusctl](https://gitlab.com/asus-linux/asusctl). You don't need `sudo` for these:
+
+1. `asusctl fan-curve -m performance -f cpu -D 30c:80,40c:80,50c:80,60c:180,70c:180,80c:180,90c:180,180c:220` to set the CPU fan curve.
+2. `asusctl fan-curve -m performance -f gpu -D 30c:80,40c:80,50c:80,60c:180,70c:180,80c:180,90c:180,180c:220` to set the GPU fan curve.
 
 ## What do the flags do?
 - `vblank_mode=0` prevents Proton for trying to wait for vblank (the next screen redraw), which depending on a number of factors (desktop environment, and your specific config), it may not even get. This can lead to a really weird tearing effect.
