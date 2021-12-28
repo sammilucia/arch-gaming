@@ -17,7 +17,7 @@ This guide assumes you have the latest NVIDIA drivers installed and working corr
 2. If you want Steam to start with certain command line options, create a file `~/.config/steam-runtime-flags.conf` and put the options in there. There are a few ways to list them, however I find one per line easy, e.g:![Screenshot from 2021-12-27 22-51-42](https://user-images.githubusercontent.com/3295286/147530918-11996753-b1c4-443a-bda2-e18ed550c519.png)
 3. In Steam > Settings > Steam Play > **Enable Steam Play for all other titles** > **Proton Experimental** ![Screenshot from 2021-12-27 22-48-14](https://user-images.githubusercontent.com/3295286/147529249-29eb8927-abf3-4fba-b092-6fa8a0f66c39.png)
 4. Force the new game to run with Proton Experimental: Right click the game > Properties > Compatibility > **Force the use of a specific Steam Play compatibility tool** > **Proton Experimental** ![Screenshot from 2021-12-27 22-53-12](https://user-images.githubusercontent.com/3295286/147529496-fc4e14c3-1a7b-4ef8-9211-6cbf09e14236.png)
-5. Change the Launch Options for the game to enable the newest Proton flags: Game > Properties > General > **Launch Options** > `gamemoderun vblank_mode=0 VKD3D_CONFIG=force_static_cbv PROTON_ENABLE_NVAPI=1 PROTON_HIDE_NVIDIA_GPU=0 %command%`![Screenshot from 2021-12-27 22-55-08](https://user-images.githubusercontent.com/3295286/147529599-6fbb0362-4527-4009-b6f7-13161e4df57c.png)
+5. Change the Launch Options for the game to enable the newest Proton flags: Game > Properties > General > **Launch Options** > `gamemoderun vblank_mode=0 __GL_SHADER_DISK_CACHE=1 __GL_SHADER_DISK_CACHE_PATH=/var/cache/shaders VKD3D_CONFIG=force_static_cbv PROTON_ENABLE_NVAPI=1 PROTON_HIDE_NVIDIA_GPU=0 %command%`![Screenshot from 2021-12-27 22-55-08](https://user-images.githubusercontent.com/3295286/147529599-6fbb0362-4527-4009-b6f7-13161e4df57c.png)
 
 ## Enable Game Mode scheduling
 Game Mode configures the CPU governer, scheduler, and process niceness for maximum performance for games. To enable Game Mode:
@@ -32,7 +32,39 @@ Include = /etc/pacman.d/mirrorlist
 3. Install `lib32-gamemode` with `pacman -S lib32-gamemode` [link to library](https://github.com/FeralInteractive/gamemode).
 4. add `gamemoderun` to the beginning of your Steam game Launch Options.
 
-That should be about it! Try the game and see how it goes.
+## Enable Shader Cache per game
+By default the NVIDIA Shader Cache is 128MB and shared for all games. To enable Shader Cache per game:
+
+1. Create a folder for the cache, e.g: `mkdir /var/cache/shaders`.
+2. Add the commands `__GL_SHADER_DISK_CACHE=1` and `__GL_SHADER_DISK_CACHE_PATH=/var/cache/shaders` to Launch Options to enable the per-game cache.
+
+That should be it! Try the game and see how it goes.
+
+## Using environment variables
+If you don't want to specify launch options for _every single game_ you can put the safe options into `/etc/environment` so they are enabled during login. To do this:
+
+1. Create and edit the file with `nano /etc/environment` if it doesn't already exist.
+2. Add the _probably safe_ options to the file, for example:
+
+```
+# Enable DLSS
+PROTON_ENABLE_NVAPI=1
+PROTON_HIDE_NVIDIA_GPU=0
+
+# Enable shader cache per game instead of global shader cache
+__GL_SHADER_DISK_CACHE=1
+__GL_SHADER_DISK_CACHE_PATH=/var/cache/shaders
+
+# Enable threaded optomisation for OpenGL
+__GL_THREADED_OPTIMIZATION=1
+
+# Enable Vulkan and lock it to NVIDIA
+__NV_PRIME_RENDER_OFFLOAD=1
+__VK_LAYER_NV_optimus=NVIDIA_only
+```
+3. In the above example you would still use launch options like: `gamemoderun vblank_mode=0 VKD3D_CONFIG=force_static_cbv %command%`. Unless you want to live on the wild side and put them all into env variables.
+
+The other disadvantage of this method is that if you play some lightweight games on battery (\*cough\* Stardew Valley \*cough\*), they will be forced to use the NVIDIA, which will drain battery.
 
 ## What do the flags do?
 - `vblank_mode=0` prevents Proton for trying to wait for vblank (the next screen redraw), which depending on a number of factors (desktop environment, and your specific config), it may not even get. This can lead to a really weird tearing effect.
