@@ -29,7 +29,7 @@ Game Mode configures the CPU governer, scheduler, and process niceness for maxim
 Include = /etc/pacman.d/mirrorlist
 ```
 2. Run `pacman -Syy` to update your repositories.
-3. Install `lib32-gamemode` with `pacman -S lib32-gamemode`
+3. Install `lib32-gamemode` with `pacman -S lib32-gamemode` [link to library](https://github.com/FeralInteractive/gamemode).
 4. add `gamemoderun` to the beginning of your Steam game Launch Options.
 
 That should be about it! Try the game and see how it goes.
@@ -49,5 +49,5 @@ That should be about it! Try the game and see how it goes.
 
 ## Futher reading
 - [Lutris docs](https://github.com/lutris/docs/blob/master/Performance-Tweaks.md) - an (?up-to-date) list of (?all) flags.
-- [Gaming - ArchWiki](https://wiki.archlinux.org/title/Gaming#Improving_performance) - of special interest, the section on `schedtool` and `schedtoold`
+- [Gaming - ArchWiki](https://wiki.archlinux.org/title/Gaming#Improving_performance) the Arch Wiki may have some other tweaks. Please note the section on `schedule` and `scheduled` should _not be required_ with Game Mode (unverified).
 - [Xanmod kernel](https://github.com/arglebargle-arch/xanmod-rog-PKGBUILD) - including the Asus ROG patches from (Asus Linux)[https://asus-linux.org/]
