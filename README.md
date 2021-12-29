@@ -10,7 +10,13 @@ I was also getting terrible performance on newer games like Cyberpunk 2077 or Re
 Please feel free to contribute! I most certainly am not the expert on this, just trying to work out how to play games! 😊
 
 ## Prerequisites
-This guide assumes you have the latest NVIDIA drivers installed and working correctly. Version 495.46 at the time of writing.
+1. This guide assumes you have the latest NVIDIA drivers installed and working correctly. Version 495.46 at the time of writing.
+2. The guide also assumes you have a kernel with FSYNC enabled, this means either kernel 5.16.x, or Xanmod (and possibly others)
+
+## Update your kernel
+If your distro doesn't yet have the 5.16.x kernel (you can check with `uname -r`), you can install Xanmod by following the instructions [here](https://github.com/arglebargle-arch/xanmod-rog-PKGBUILD). Xanmod enables FSYNC, and Intel Clear patches, and some other performance chages.
+
+At the time of writing I believe there are some blocking issues for 5.16.x kernels on Asus notebooks.
 
 ## Steam configuration
 1. Install the latest [Steam](https://archlinux.org/packages/multilib/x86_64/steam/), login and download your games
@@ -106,7 +112,9 @@ I use the following commands to set fan curves for the Performance power profile
 2. `asusctl fan-curve -m performance -f gpu -D 30c:80,40c:80,50c:80,60c:180,70c:180,80c:180,90c:180,180c:220` to set the GPU fan curve.
 
 ## Lutris installation
-Finally, you can install Lutris, which provides a single interface for all your games, and runs games with community optimised settings.
+**Note: For me, installing Lutris made games run _worse_. I don't yet know why, however games became extremely choppy and unplayable. Removing Lutris fixed this,**
+
+You can install Lutris, which provides a single interface for all your games, and runs games with community optimised settings.
 
 To install, do:
 1. `pacman -S lutris python-magic`
