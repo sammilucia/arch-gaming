@@ -145,8 +145,8 @@ If you are on a recent Asus notebook, see asus-linux.org for guides on how to pr
 
 I use the following commands to set fan curves for the Performance power profile with [asusctl](https://gitlab.com/asus-linux/asusctl). You don't need `sudo` for these:
 
-1. `asusctl fan-curve -m performance -f cpu -D 30c:80,40c:80,50c:80,60c:180,70c:180,80c:220,90c:180,100c:220` to set the CPU fan curve.
-2. `asusctl fan-curve -m performance -f gpu -D 30c:80,40c:80,50c:80,60c:180,70c:180,80c:220,90c:180,100c:220` to set the GPU fan curve.
+1. `asusctl fan-curve -m performance -f cpu -D 30c:80,40c:80,50c:80,60c:180,70c:180,80c:180,90c:220,100c:220` to set the CPU fan curve.
+2. `asusctl fan-curve -m performance -f gpu -D 30c:80,40c:80,50c:80,60c:180,70c:180,80c:180,90c:220,100c:220` to set the GPU fan curve.
 
 ## Lutris installation
 **Note 1: For me, installing Lutris made games run _worse_. I don't yet know why, however games became extremely choppy and unplayable. Removing Lutris fixed this,**
