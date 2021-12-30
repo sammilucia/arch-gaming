@@ -62,7 +62,8 @@ Note: you can check whether Game Mode is active with `gamemoded -s` from a comma
 
 ## Enable saving the Shader Cache
 By default the Shader Cache will generate every time a game is launched. To enable saving of the Shader Cache:
-1. Right-click game > Properties > **Shader Pre-Caching** > Check **Enable Shader Pre-Caching** AND **Allow background processing of Vulkan shaders**: 
+1. Right-click game > Properties > **Shader Pre-Caching** > Check **Enable Shader Pre-Caching** AND **Allow background processing of Vulkan shaders**:
+
 ![Screenshot from 2021-12-29 19-06-01](https://user-images.githubusercontent.com/3295286/147714558-717f9252-862e-4d2f-b300-8d47085286b4.png)
 
 The Shader Cache should now start generating and saving the cache for that game.
