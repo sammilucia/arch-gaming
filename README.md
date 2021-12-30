@@ -1,5 +1,5 @@
 # Guide to gaming on Arch Linux 
-How to run games on Arch (and configure Steam and Proton).
+How to run games on Arch (and configure Steam and Proton). Thanks to Leopard on the asus-linux Discord for your help, and to the creators of asus-linux.org for all their tireless work getting everything working on Asus notebooks 😊.
 
 ## Summary
 It came to my attention Arch doesn't have a lot of stuff set up for gaming (this isn't a surprise, Arch doesn't have a lot of set up for...anything!) So Writing it here.
@@ -14,16 +14,20 @@ Please feel free to contribute! I most certainly am not the expert on this, just
 2. The guide also assumes you have a kernel with FSYNC enabled, this means either kernel 5.16.x, or Xanmod (and possibly others)
 
 ## Update your kernel
-If your distro doesn't yet have the 5.16.x kernel (you can check with `uname -r`), you can install Xanmod by following the instructions [here](https://github.com/arglebargle-arch/xanmod-rog-PKGBUILD). Xanmod enables FSYNC, and Intel Clear patches, and some other performance chages.
+1. If your distro doesn't yet have the 5.16.x kernel (you can check with `uname -r`), you can install Xanmod by following the instructions [here](https://github.com/arglebargle-arch/xanmod-rog-PKGBUILD). Xanmod enables FSYNC, and Intel Clear patches, and some other performance chages.
+2. To enable vsync passthrough (depending on how well a game implements its vsync), add `nvidia-drm.modeset=1` to the `GRUB_CMDLINE_LINUX_DEFAULT` line in `/etc/default/grub`
+3. You can also reduce mouse latency by adding `usbhid.mousepoll=1` to `GRUB_CMDLINE_LINUX_DEFAULT`. Note this is probably broken since kernel 4.4.x, however it shouldn't hurt to add it.
+4. Regenerate grub by running `grub-mkconfig -o /boot/grub/grub.cfg`.
+5. Reboot.
 
-At the time of writing I believe there are some blocking issues for 5.16.x kernels on Asus notebooks.
+_Note: At the time of writing I believe there are some blocking issues from using 5.16.x kernels on Asus notebooks._
 
 ## Steam configuration
 1. Install the latest [Steam](https://archlinux.org/packages/multilib/x86_64/steam/), login and download your games
-2. If you want Steam to start with certain command line options, create a file `~/.config/steam-runtime-flags.conf` and put the options in there. There are a few ways to list them, however I find one per line easy, e.g:![Screenshot from 2021-12-27 22-51-42](https://user-images.githubusercontent.com/3295286/147530918-11996753-b1c4-443a-bda2-e18ed550c519.png)
-3. In Steam > Settings > Steam Play > **Enable Steam Play for all other titles** > **Proton Experimental** ![Screenshot from 2021-12-27 22-48-14](https://user-images.githubusercontent.com/3295286/147529249-29eb8927-abf3-4fba-b092-6fa8a0f66c39.png)
-4. Force the new game to run with Proton Experimental: Right click the game > Properties > Compatibility > **Force the use of a specific Steam Play compatibility tool** > **Proton Experimental** ![Screenshot from 2021-12-27 22-53-12](https://user-images.githubusercontent.com/3295286/147529496-fc4e14c3-1a7b-4ef8-9211-6cbf09e14236.png)
-5. Change the Launch Options for the game to enable the newest Proton flags: Game > Properties > General > **Launch Options** > `gamemoderun vblank_mode=0 __GL_SHADER_DISK_CACHE=1 __GL_SHADER_DISK_CACHE_PATH=/var/cache/shaders VKD3D_CONFIG=force_static_cbv PROTON_ENABLE_NVAPI=1 PROTON_HIDE_NVIDIA_GPU=0 %command%`![Screenshot from 2021-12-27 22-55-08](https://user-images.githubusercontent.com/3295286/147529599-6fbb0362-4527-4009-b6f7-13161e4df57c.png)
+2. If you want Steam to start with certain command line options, create a file `~/.config/steam-runtime-flags.conf` and put the options in there. (Note: if this doesn't work for you, you may need to modify the `Exec` in the `steam.desktop` shortcut. There are a few ways to list them, however I find one per line easy, e.g:![Screenshot from 2021-12-27 22-51-42](https://user-images.githubusercontent.com/3295286/147530918-11996753-b1c4-443a-bda2-e18ed550c519.png)
+4. In Steam > Settings > Steam Play > **Enable Steam Play for all other titles** > **Proton Experimental** ![Screenshot from 2021-12-27 22-48-14](https://user-images.githubusercontent.com/3295286/147529249-29eb8927-abf3-4fba-b092-6fa8a0f66c39.png)
+5. Force the new game to run with Proton Experimental: Right click the game > Properties > Compatibility > **Force the use of a specific Steam Play compatibility tool** > **Proton Experimental** ![Screenshot from 2021-12-27 22-53-12](https://user-images.githubusercontent.com/3295286/147529496-fc4e14c3-1a7b-4ef8-9211-6cbf09e14236.png)
+6. Change the Launch Options for the game to enable gamemode (see below), and force NVIDIA: Right-click game > Properties > General > **Launch Options** > `gamemoderun __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json %command%`![Screenshot from 2021-12-29 19-06-45](https://user-images.githubusercontent.com/3295286/147714429-727c07dc-8ade-4dd1-8a08-3a6791a4ddaa.png)
 
 ## Enable Game Mode scheduling
 Game Mode configures the CPU governer, scheduler, and process niceness for maximum performance for games. To enable Game Mode:
@@ -43,22 +47,20 @@ Include = /etc/pacman.d/mirrorlist
 8. Edit system security limits for users `nano /etc/security/limits.conf` to add the line:
 
 ```
-@gamemode       -       nice    19
+@gamemode       -       nice    10
 ```
 
-This will enable user accounts that are members of the gamemode group to increase (or 'renice') processes.
+This will enable user accounts that are members of the gamemode group to increase (or 'renice') processes up to a value of 10.
 
-9. Now test everything is working by running `gamemoded -t`. Fix any errors (hopefully none).
+9. Now test everything is working by running `gamemoded -t` and fix any errors (hopefully none).
 
 Note: you can check whether Game Mode is active with `gamemoded -s` from a command line. For more information on Game Mode and an example config (ini) file see the [Arch Wiki](https://wiki.archlinux.org/title/Gamemode).
 
-## Enable Shader Cache per game
-By default the NVIDIA Shader Cache is 128MB and shared for all games. To enable Shader Cache per game:
+## Enable saving the Shader Cache
+By default the Shader Cache will generate every time a game is launched. To enable saving of the Shader Cache:
+1. Right-click game > Properties > **Shader Pre-Caching** > Check **Enable Shader Pre-Caching** AND **Allow background processing of Vulkan shaders**: ![Screenshot from 2021-12-29 19-06-01](https://user-images.githubusercontent.com/3295286/147714558-717f9252-862e-4d2f-b300-8d47085286b4.png)
 
-1. Create a folder for the cache, e.g: `mkdir /var/cache/shaders`.
-2. Add the commands `__GL_SHADER_DISK_CACHE=1` and `__GL_SHADER_DISK_CACHE_PATH=/var/cache/shaders` to Launch Options to enable the per-game cache.
-
-That should be it! Try the game and see how it goes.
+The Shader Cache should now generate and save for that game.
 
 ## Fix laggy screen updates
 For whatever reason (maybe me not understanding something) `vblank_mode=0` still leaves me with a weird laggy display and screen tearing. This fix shouldn't hurt and it works for me. To fix this:
@@ -78,41 +80,71 @@ For whatever reason (maybe me not understanding something) `vblank_mode=0` still
 3. Reboot.
 
 ## Using environment variables instead
-If you don't want to specify launch options for _every single game_ you can put the safe options into `/etc/environment` so they are enabled during login. To do this:
+If you don't want to specify launch options for _every single game_ you can put _known safe_ options into `/etc/environment` so they are enabled during login. To do this:
 
 1. Create and edit the file with `nano /etc/environment` if it doesn't already exist.
-2. Add the _probably safe_ options to the file, for example:
+2. Add your desired options, for example:
 
 ```
-# Enable DLSS
+#
+# This file is parsed by pam_env module
+#
+# Syntax: simple "KEY=VAL" pairs on separate lines
+#
+
+# Configure AMD. Only required if you have AMD iGPU/dGPU
+AMD_VULKAN_ICD="RADV"
+QT_QPA_PLATFORMTHEME="qt5ct"
+MOZ_ENABLE_WAYLAND=1
+
+# Enable AMD ACO shader compiler threading
+mesa_glthread=true
+
+# Set video decode to AMD. This should be set automatically since 12.0.1 of
+# libva-mesa-driver. This is only in here for testing.
+#VDPAU_DRIVER="radeonsi"
+
+# Enable rendering. Still in development, will probably crash!
+#VKD3D_CONFIG=dxr11
+#VKD3D_CONFIG=dxr
+
+# Pascal speed hack for Vulkan for all games. This should make a big difference
+# however _may_ cause problems in some games. If it does for you, move it from
+# here to steam Launch Options.
+VKD3D_CONFIG=force_static_cbv
+
+# Enable DLSS. This is still fairly new.
 PROTON_ENABLE_NVAPI=1
 PROTON_HIDE_NVIDIA_GPU=0
 
-# Enable shader cache per game instead of global shader cache
+# Compensate for compositing Window Managers:
+# 1 = Display _previous_ rendered frame. Highest FPS, but higher latency
+# 2 = Display _latest_ rendered frame, better latency, but _possibly_ lower FPS
+PRIMUS_SYNC=2
+
+# Enable shader disk cache per game instead of regenerating the cache at every
+# game launch. The disk cache path should no longer be required, however if
+# the shader cache is being regenerated each launch, try specifying it.
 __GL_SHADER_DISK_CACHE=1
-__GL_SHADER_DISK_CACHE_PATH=/var/cache/shaders
+#__GL_SHADER_DISK_CACHE_PATH=/var/cache/shaders
 
-# Enable threaded optomisation for OpenGL
+# Enable threaded optomisation for OpenGL.
 __GL_THREADED_OPTIMIZATION=1
-
-# Enable Vulkan and lock it to NVIDIA
-__NV_PRIME_RENDER_OFFLOAD=1
-__VK_LAYER_NV_optimus=NVIDIA_only
 ```
-3. In the above example you would still use launch options like: `gamemoderun vblank_mode=0 VKD3D_CONFIG=force_static_cbv %command%`. Unless you want to live on the wild side and put them all into env variables.
 
-The other disadvantage of this method is that if you play some lightweight games on battery (\*cough\* Stardew Valley \*cough\*), they will be forced to use the NVIDIA, which will drain battery.
+3. In the above example you would still use the Launch Options above to force the use of NVIDIA. Using Launch Options this way enables you to still run some games on the iGPU, so you can play less demanding games on battery.
 
 ## Asus fan settings
 If you are on a recent Asus notebook, see asus-linux.org for guides on how to properly configure NVIDIA drivers and support for configurable fan curves.
 
 I use the following commands to set fan curves for the Performance power profile with [asusctl](https://gitlab.com/asus-linux/asusctl). You don't need `sudo` for these:
 
-1. `asusctl fan-curve -m performance -f cpu -D 30c:80,40c:80,50c:80,60c:180,70c:180,80c:180,90c:180,180c:220` to set the CPU fan curve.
-2. `asusctl fan-curve -m performance -f gpu -D 30c:80,40c:80,50c:80,60c:180,70c:180,80c:180,90c:180,180c:220` to set the GPU fan curve.
+1. `asusctl fan-curve -m performance -f cpu -D 30c:80,40c:80,50c:80,60c:180,70c:180,80c:220,90c:180,100c:220` to set the CPU fan curve.
+2. `asusctl fan-curve -m performance -f gpu -D 30c:80,40c:80,50c:80,60c:180,70c:180,80c:220,90c:180,100c:220` to set the GPU fan curve.
 
 ## Lutris installation
-**Note: For me, installing Lutris made games run _worse_. I don't yet know why, however games became extremely choppy and unplayable. Removing Lutris fixed this,**
+**Note 1: For me, installing Lutris made games run _worse_. I don't yet know why, however games became extremely choppy and unplayable. Removing Lutris fixed this,**
+_Note 2: With all the above config, you actually shoudln't need Lutris.
 
 You can install Lutris, which provides a single interface for all your games, and runs games with community optimised settings.
 
@@ -125,19 +157,37 @@ To install, do:
 That should be it! Run Lutris, and start your games from Lutris, this should hopefully have the most optimised and tested settings for each game. If you have any problems, you can run `lutris -d` to see what might be going on.
 
 ## What do the flags do?
-- `vblank_mode=0` prevents Proton for trying to wait for vblank (the next screen redraw), which depending on a number of factors (desktop environment, and your specific config), it may not even get. This can lead to a really weird tearing effect.
-- `PROTON_ENABLE_NVAPI=1` is a new command which enables DLSS.
-- `PROTON_HIDE_NVIDIA_GPU=0` enables the NVIDIA GPU for DLSS.
-- `VKD3D_CONFIG=force_static_cbv` improves Pascal performance in DX12 games. It may cause problems or your game may not start with this (?Horizon Zero Dawn), but worth trying.
-
-## Other flags to try/experimenting
-- `VKD3D_CONFIG=dxr11` or `dxr` enables RTX/raytracing support. I haven't had any success with this and RTX support is still in development, though ymmv.
-- `__GL_THREADED_OPTIMIZATION=1` allows the NVIDIA driver to work multithreaded for OpenGL only (not Vulkan), _however_ be aware threading is not always good! As a rule of thumb if the GPU is under heavy burden, this may actually decrease FPS.
+- `vblank_mode=0` prevents Proton for trying to wait for vblank (the next screen redraw), which depending on a number of factors (desktop environment, and your specific config), it may not even get. This can lead to a really weird tearing effect. If you don't see this problem, you do not need to enable this flag. This may vary by game, depending on how each game has implemented vsync (i.e: "well", or "poorly").
 - `__NV_PRIME_RENDER_OFFLOAD=1` causes VK_LAYER_NV_optimus (Vulkan) to be loaded. I'm not sure this is needed any more.
 - `__GLX_VENDOR_LIBRARY_NAME=nvidia` together with `__NV_PRIME_RENDER_OFFLOAD=1` forces OpenGL to choose the NVIDIA driver.
 - `__VK_LAYER_NV_optimus=NVIDIA_only`together with `__NV_PRIME_RENDER_OFFLOAD=1` forces Vulkan to choose the NVIDIA driver.
+
+## "Experimental" flags
+- `VKD3D_CONFIG=dxr11` or `VKD3D_CONFIG=dxr` enables RTX/raytracing support. I haven't had any success with this, it's caused some games to not start up after enabling RTX, and manually having to disable RTX in the games `.ini`. Raytracing support is still in development, so proceed with caution.
+- `__GL_THREADED_OPTIMIZATION=1` allows the NVIDIA driver to work multithreaded for OpenGL only (not Vulkan), _however_ be aware threading is not always good! As a rule of thumb if the GPU is under heavy burden, this may actually decrease FPS.
 
 ## Futher reading
 - [Lutris docs](https://github.com/lutris/docs/blob/master/Performance-Tweaks.md) - an (?up-to-date) list of (?all) flags.
 - [Gaming - ArchWiki](https://wiki.archlinux.org/title/Gaming#Improving_performance) the Arch Wiki may have some other tweaks. Please note the section on `schedule` and `scheduled` should _not be required_ with Game Mode (unverified).
 - [Xanmod kernel](https://github.com/arglebargle-arch/xanmod-rog-PKGBUILD) - including the Asus ROG patches from (Asus Linux)[https://asus-linux.org/]
+
+## Changelog
+
+29-Dec-21:
+- Added changelog
+- Enabled launching of some games on iGPU
+- Added warning about Lutris
+- Fixed fan curve typos
+
+28-Dec-21:
+- Added Lutris
+
+27-Dec-21 #2:
+- Added renice
+- Added gamemode
+- Added renice fix
+- Added fan curves
+- Added vblank fix
+
+27-Dec-21 #1:
+- Initial version
