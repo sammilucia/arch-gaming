@@ -2,19 +2,23 @@
 How to run games on Arch (and configure Steam and Proton). Thanks to Leopard on the asus-linux Discord for your help, and to the creators of asus-linux.org for all their tireless work getting everything working on Asus notebooks 😊.
 
 ## Summary
-It came to my attention Arch doesn't have a lot of stuff set up for gaming (this isn't a surprise, Arch doesn't have a lot of set up for...anything!) So Writing it here.
+It came to my attention it's really hard to find definitive information on how to cinfigure gaming on Linux. This guide is written for Arch (because I'm on Arch), however the concepts can be adapted to any _up-to-date_ Linux distro.*
 
 I was also getting terrible performance on newer games like Cyberpunk 2077 or Resident Evil (much worse than Windows) and couldn't find any straightforward information on configuring this. So here we are!
 
+_*Note: At the the time of writing, Fedora, and Arch are probably the only really up-to-date distros, though you may have success with some gaming-specific distros, I don't use them, so cannot confirm this._
+
 ## Contributing
-Please feel free to contribute! I most certainly am not the expert on this, just trying to work out how to play games! 😊
+Please feel free to contribute! I most certainly am not the expert on this topic, just trying to work out how to play games! 😊
 
 ## Prerequisites
 1. This guide assumes you have the latest NVIDIA drivers installed and working correctly. Version 495.46 at the time of writing.
-2. The guide also assumes you have a kernel with FSYNC enabled, this means either kernel 5.16.x, or Xanmod (and possibly others)
+2. The guide also assumes you have a kernel with FSYNC enabled, this means either kernel 5.16.x, or Xanmod (and possibly some other modded kernels).
 
 ## Update your kernel
-1. If your distro doesn't yet have the 5.16.x kernel (you can check with `uname -r`), you can install Xanmod by following the instructions [here](https://github.com/arglebargle-arch/xanmod-rog-PKGBUILD). Xanmod enables FSYNC, and Intel Clear patches, and some other performance chages.
+Xanmod enables FSYNC, and Intel Clear patches, and some other performance chages.
+
+1. If your distro doesn't yet have the 5.16.x kernel (you can check with `uname -r`), you can install Xanmod by following the instructions [here](https://github.com/arglebargle-arch/xanmod-rog-PKGBUILD) for Arch, or it should be fairly easy to find a recent Xanmod built for your distro.
 2. To enable vsync passthrough (depending on how well a game implements its vsync), add `nvidia-drm.modeset=1` to the `GRUB_CMDLINE_LINUX_DEFAULT` line in `/etc/default/grub`
 3. You can also reduce mouse latency by adding `usbhid.mousepoll=1` to `GRUB_CMDLINE_LINUX_DEFAULT`. Note this is probably broken since kernel 4.4.x, however it shouldn't hurt to add it.
 4. Regenerate grub by running `grub-mkconfig -o /boot/grub/grub.cfg`.
