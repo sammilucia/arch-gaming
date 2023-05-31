@@ -2,7 +2,7 @@
 How to run games on Arch (and configure Steam and Proton). Thanks to Leopard on the asus-linux Discord for your help, and to the creators of asus-linux.org for all their tireless work getting everything working on Asus notebooks 😊.
 
 ## Summary
-It came to my attention it's really hard to find definitive information on how to cinfigure gaming on Linux. This guide is written for Arch (because I'm on Arch), however the concepts can be adapted to any _up-to-date_ Linux distro.*
+It came to my attention it's really hard to find definitive information on how to configure gaming on Linux. This guide is written for Arch (because I'm on Arch), however the concepts can be adapted to any _up-to-date_ Linux distro.*
 
 I was also getting terrible performance on newer games like Cyberpunk 2077 or Resident Evil (much worse than Windows) and couldn't find any straightforward information on configuring this. So here we are!
 
